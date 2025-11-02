@@ -1,0 +1,25 @@
+@DSL DefaultModelDSL{
+  automatic_declaration_of_the_temperature_as_first_external_state_variable :
+      false
+};
+@Model DuctileDamageIndicator_Freudenthal1950;
+
+@AuxiliaryStateVariable real di;
+di.setEntryName("DamageIndicator");
+@ExternalStateVariable strain p;
+p.setGlossaryName("EquivalentPlasticStrain");
+@ExternalStateVariable StressStensor sig;
+sig.setGlossaryName("Stress");
+
+@MaterialProperty real D1;
+
+@Integrator {
+  // stress at the middle of the time step
+  const auto sig_mts = eval(sig + dsig / 2);
+  // compute von Mises stress
+  const auto seq_mts = sigmaeq(sig_mts);
+  // compute damage function
+  const auto W_mts = seq_mts / D1;
+  // update damage indicator
+  di += W_mts * dp;
+}

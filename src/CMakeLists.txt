@@ -1,0 +1,11 @@
+mfront_models_library(FailureCriteria
+  BrittleFractureProbability_Beremin1983
+  BrittleFractureProbability_RuggieriDodds2015
+  BrittleFractureProbability_ForgetMariniVincent2016
+  DuctileDamageIndicator_Freudenthal1950
+  DuctileDamageIndicator_CockcroftLatham1968
+  DuctileDamageIndicator_RiceTracey1969
+  DuctileDamageIndicator_HancockMcKenzie1976
+  DuctileDamageIndicator_JohnsonCook1985
+  DuctileDamageIndicator_Huang1991
+  DuctileDamageIndicator_BaiWierzbicki2010)

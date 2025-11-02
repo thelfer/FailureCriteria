@@ -1,0 +1,54 @@
+@DSL DefaultModelDSL{
+  automatic_declaration_of_the_temperature_as_first_external_state_variable :
+      false
+};
+@Model DuctileDamageIndicator_BaiWierzbicki2010;
+
+@AuxiliaryStateVariable real di;
+di.setEntryName("DamageIndicator");
+@ExternalStateVariable strain p;
+p.setGlossaryName("EquivalentPlasticStrain");
+@ExternalStateVariable StressStensor sig;
+sig.setGlossaryName("Stress");
+
+@MaterialProperty real A;
+@MaterialProperty real C1;
+@MaterialProperty real C2;
+@MaterialProperty real n;
+@MaterialProperty real ceta;
+@MaterialProperty real eta0;
+@MaterialProperty real cths;
+@MaterialProperty real cthc;
+
+@Integrator {
+  const auto Pi = std::numbers::pi_v<real>;
+  if (dp > 0) {
+    // stress at the middle of the time step
+    const auto sig_mts = eval(sig + dsig / 2);
+    // if the increment of the equivalent plastic strain is not null, we can
+    // safely assume that seq is not null and that the stress triaxiality is
+    // well defined
+    // compute mean stress
+    const auto sm_mts = trace(sig_mts) / 3;
+    // compute von Mises stress
+    const auto seq_mts = sigmaeq(sig_mts);
+    // compute J2 invariant
+    const auto J2_mts = seq_mts * seq_mts / 3;
+    // compute J3 invariant
+    const auto J3_mts = det(deviator(sig_mts));
+    // compute stress triaxiality
+    const auto eta_mts = sm_mts / seq_mts;
+    // compute damage function
+    const auto th_mts =
+        1 - 2 * (acos((3 * sqrt(3) * J3_mts) / (2 * power<3, 2>(J2_mts)))) / Pi;
+    const auto cthax = (th_mts < 0 ? cthc : 1);
+    const auto tmp1 = (A / C2) * (1 - ceta * (eta_mts - eta0));
+    const auto tmp2 = cths + (cthax - cths) * (sqrt(3) / (2 - sqrt(3))) *
+                                 ((1 / cos(th_mts * (Pi / 6))) - 1);
+    const auto tmp3 = sqrt((1 + C1 * C1) / 3) * cos(th_mts * (Pi / 6)) +
+                      C1 * (eta_mts + sin(th_mts * (Pi / 6)) / 3);
+    const auto W_mts = pow(tmp1 * tmp2 * tmp3, 1 / n);
+    // update damage indicator
+    di += W_mts * dp;
+  }
+}

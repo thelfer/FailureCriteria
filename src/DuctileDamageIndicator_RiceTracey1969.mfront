@@ -1,0 +1,35 @@
+@DSL DefaultModelDSL{
+  automatic_declaration_of_the_temperature_as_first_external_state_variable :
+      false
+};
+@Model DuctileDamageIndicator_RiceTracey1969;
+
+@AuxiliaryStateVariable real di;
+di.setEntryName("DamageIndicator");
+@ExternalStateVariable strain p;
+p.setGlossaryName("EquivalentPlasticStrain");
+@ExternalStateVariable StressStensor sig;
+sig.setGlossaryName("Stress");
+
+@MaterialProperty real D1;
+@MaterialProperty real D2;
+
+@Integrator {
+  if (dp > 0) {
+    // stress at the middle of the time step
+    const auto sig_mts = eval(sig + dsig / 2);
+    // if the increment of the equivalent plastic strain is not null, we can
+    // safely assume that seq is not null and that the stress triaxiality is
+    // well defined
+    // compute mean stress
+    const auto sm_mts = trace(sig_mts) / 3;
+    // compute von Mises stress
+    const auto seq_mts = sigmaeq(sig_mts);
+    // compute stress triaxiality
+    const auto eta_mts = sm_mts / seq_mts;
+    // compute damage function
+    const auto W_mts = 1 / (D1 * exp(D2 * eta_mts));
+    // update damage indicator
+    di += W_mts * dp;
+  }
+}

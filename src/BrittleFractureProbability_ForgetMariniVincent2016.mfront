@@ -1,0 +1,52 @@
+@DSL DefaultModelDSL{
+  automatic_declaration_of_the_temperature_as_first_external_state_variable :
+      false
+};
+@Model BrittleFractureProbability_ForgetMariniVincent2016;
+
+@AuxiliaryStateVariable real pf;
+pf.setEntryName("LocalFractureProbability");
+@ExternalStateVariable strain p;
+p.setGlossaryName("EquivalentPlasticStrain");
+@ExternalStateVariable StressStensor sig;
+sig.setGlossaryName("Stress");
+
+@MaterialProperty real E;
+@MaterialProperty real nu;
+@MaterialProperty real gamma_f;
+@MaterialProperty real alpha_r;
+@MaterialProperty real beta_r;
+@MaterialProperty real gamma_r;
+@MaterialProperty real mh;
+@MaterialProperty real kh;
+@MaterialProperty real nc;
+
+@Includes {
+#include "TFEL/Math/NumericalIntegration/GaussKronrodQuadrature.hxx"
+}
+
+@Integrator {
+  // stress at the middle of timestep
+  const auto sig_mts = eval(sig + dsig / 2);
+  // compute eigenvalues
+  const auto svp_mts = sig_mts.computeEigenValues();
+  // sort eigenvalues
+  const auto [s1_mts, s2_mts, s3_mts] = sortEigenValues(svp_mts);
+  // function to be integrated
+  auto integrand = [this, s1_mts](double r) {
+    auto dF_dr = (2 * alpha_r / beta_r) *
+                 std::pow((2 * r - gamma_r) / beta_r, alpha_r - 1) *
+                 std::exp(-std::pow((2 * r - gamma_r) / beta_r, alpha_r));
+    auto sig_c = sqrt((std::numbers::pi_v<real> * E * gamma_f) /
+                      (2 * (1 - nu * nu) * r));
+    return dF_dr * exp(-pow(sig_c / (kh * s1_mts), mh));
+  };
+  // integrate the function
+  auto integral = tfel::math::gauss_kronrod_integrate(
+      integrand, double{}, std::numeric_limits<double>::max(),
+      {.absolute_tolerance = 1e-12, .maximum_number_of_refinements = 8});
+  // compute local fracture probability
+  if (integral.has_value()) {
+    pf = nc * (*integral);
+  }
+}

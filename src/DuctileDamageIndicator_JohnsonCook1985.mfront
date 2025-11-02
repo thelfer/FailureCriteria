@@ -1,0 +1,45 @@
+@DSL DefaultModelDSL;
+@Model DuctileDamageIndicator_JohnsonCook1985;
+
+@AuxiliaryStateVariable real di;
+di.setEntryName("DamageIndicator");
+@ExternalStateVariable strain p;
+p.setGlossaryName("EquivalentPlasticStrain");
+@ExternalStateVariable StressStensor sig;
+sig.setGlossaryName("Stress");
+
+@MaterialProperty real D1;
+@MaterialProperty real D2;
+@MaterialProperty real D3;
+@MaterialProperty real D4;
+@MaterialProperty real D5;
+@MaterialProperty real T_ref;
+@MaterialProperty real T_fus;
+@MaterialProperty real pp_ref;
+
+@Integrator {
+  if ((dp > 0) && (dt > 0)) {
+    // stress at the middle of the time step
+    const auto sig_mts = eval(sig + dsig / 2);
+    // if the increment of the equivalent plastic strain is not null, we can
+    // safely assume that seq is not null and that the stress triaxiality is
+    // well defined
+    // compute mean stress
+    const auto sm_mts = trace(sig_mts) / 3;
+    // compute von Mises stress
+    const auto seq_mts = sigmaeq(sig_mts);
+    // compute stress triaxiality
+    const auto eta_mts = sm_mts / seq_mts;
+    // compute temperature at the middle of time step
+    const auto T_mts = T + dT / 2;
+    // compute homologous temperature
+    const auto Th_mts = (T_mts - T_ref) / (T_fus - T_ref);
+    // compute dimensionless strain rate
+    const auto pp = dp / dt / pp_ref;
+    // compute damage function
+    const auto W_mts = 1 / ((D1 + D2 * exp(D3 * eta_mts)) * (1 + D4 * log(pp)) *
+                            (1 + D5 * Th_mts));
+    // update damage indicator
+    di += W_mts * dp;
+  }
+}
