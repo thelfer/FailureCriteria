@@ -33,7 +33,7 @@ sig.setGlossaryName("Stress");
   // sort eigenvalues
   const auto [s1_mts, s2_mts, s3_mts] = sortEigenValues(svp_mts);
   // function to be integrated
-  auto integrand = [this, s1_mts](double r) {
+  auto integrand = [this, s1_mts](double r) noexcept {
     auto dF_dr = (2 * alpha_r / beta_r) *
                  std::pow((2 * r - gamma_r) / beta_r, alpha_r - 1) *
                  std::exp(-std::pow((2 * r - gamma_r) / beta_r, alpha_r));
