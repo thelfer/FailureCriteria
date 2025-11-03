@@ -24,5 +24,7 @@ else(CMAKE_CONFIGURATION_TYPES)
 endif(CMAKE_CONFIGURATION_TYPES)
 
 # add subdirectories here
-
 add_subdirectory(src)
+if(enable-website)
+  add_subdirectory(docs/web)
+endif(enable-website)
