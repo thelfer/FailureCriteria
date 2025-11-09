@@ -1,0 +1,111 @@
+OPTI DIME 3 MODE TRID ELEM CU20 TRAC OPEN;
+
+*********************************************************
+* Maillage
+*********************************************************
+
+LM = 0.2;
+NM = ENTI (1. / LM);
+
+PP = (3. 0. 10.) PROJ (0. 0. 1.) CYLI (4.0 0. 0.) (4.0 1. 0.) (2.0 0. 0.);
+PPZ = COOR 3 PP;
+P1 = 0. 0. 0.;
+P2 = 0. 0. PPZ;
+L1 = P1 DROI P2 (ENTI (PPZ * NM));
+L2 = L1 PROJ (1. 0. 0.) CYLI (4.0 0. 0.) (4.0 1. 0.) (2.0 0. 0.);
+S1 = REGL L1 L2 (ENTI (2.0 * NM));
+S2 = (COTE 2 S1) TRAN (0. 0. (8. '-' PPZ)) (ENTI ((8. '-' PPZ)*NM));
+
+ST = S1 ET S2;
+ELIM ST 0.000001;
+
+VT = ST VOLU TRAN (0. 1. 0.) (ENTI (1*NM));
+ELIM VT 0.0000001;
+
+STOP = VT POIN PLAN (0. 0. 8.) (1. 0. 8.) (0. 1. 8.) 0.000001;
+SBOT = VT POIN PLAN (0. 0. 0.) (1. 0. 0.) (0. 1. 0.) 0.000001;
+SX0 = VT POIN PLAN (0. 0. 0.) (0. 1. 0.) (0. 0. 1.) 0.000001;
+SY0 = ST;
+
+*********************************************************
+* Modèle
+*********************************************************
+
+COEL = 'MOTS' 'YOUN' 'NU' 'RHO' 'ALPH' 'TALP' 'TREF';
+STATEV = 'MOTS' 'EEXX' 'EEYY' 'EEZZ' 'EEXY' 'EEXZ' 'EEYZ' 'P';
+
+MOD1 = 'MODELISER' VT 'MECANIQUE' 'ELASTIQUE' 'NON_LINEAIRE'
+'UTILISATEUR' 'LIB_LOI' 'src/libUmatBehaviour.so' 'FCT_LOI'
+'umattest1_malls' 'C_MATERIAU' COEL 'C_VARINTER' STATEV;
+MAT1 = 'MATERIAU' MOD1 'YOUN' 2.e5 'NU' 0.3 'RHO' 0. 'ALPH' 0.
+'TALP' 0. 'TREF' 0.;
+ 
+*********************************************************
+* Chargement
+*********************************************************
+
+CL1 = 'BLOQUE' SBOT UZ;
+CL2 = 'BLOQUE' STOP UZ;
+CL3 = 'BLOQUE' SY0 UY;
+CL4 = 'BLOQUE' SX0 UX;
+
+LT1 = 'PROG' 0. PAS 0.001 0.05;
+EV1 = 'EVOL' 'MANUEL' LT1 LT1;
+CHA0 = 'DEPIMPOSE' CL2 1;
+CHA1 = CHAR DIMP CHA0 EV1;
+
+*********************************************************
+* Sortie
+*********************************************************
+
+UN = MANU CHPO STOP 'SCAL' 1.;
+
+DEBP PERSO1 TAB1*'TABLE' ;
+
+SI ((DIME TAB1.DEPLACEMENTS) > 1);
+
+TMP1 = TAB1.ESTIMATION.CONTRAINTES;
+TMP2 = EXCO TAB1.ESTIMATION.VARIABLES_INTERNES 'P';
+TMP3 = TMP1 ET TMP2;
+TMP3 = CHAN CHPO MOD1 TMP3 SUPP;
+PTG = EXTR TMP3 'MAIL';
+TMP1 = (EXCO TMP3 ('MOTS' 'SMXX' 'SMYY' 'SMZZ' 'SMXY' 'SMXZ' 'SMYZ'));
+TMP2 = EXCO TMP3 P;
+
+OPTI SORT 'test1';
+SORT VTK PTG 'MESH' TMP1 'SIG' TMP2 'P' 'TEMP' TAB1.IVTK FORMAT;
+TAB1.'IVTK' = TAB1.'IVTK' '+' 1;
+
+TMP1 = EXCO TAB1.ESTIMATION.REACTIONS 'FZ';
+TMP2 = XTY TMP1 UN ('MOTS' 'SCAL') ('MOTS' 'SCAL');
+TAB1.'FOR1' = TAB1.'FOR1' 'ET' ('PROG' TMP2);
+TMP3 = 'EXTRAIRE' TAB1.ESTIMATION.DEPLACEMENTS UZ (POIN 1 STOP);
+TAB1.'DEP1' = TAB1.'DEP1' ET (PROG TMP3);
+
+'OPTION' 'SORTIR' 'test1.csv'; 
+'SORTIR' EXCE TAB1.'FOR1' TAB1.'DEP1' SEPA TABU;
+
+'FINSI';
+
+FINP;
+
+*********************************************************
+* Calcul
+*********************************************************
+
+TAB1 = TABLE;
+TAB1.'MODELE' = MOD1;
+TAB1.'CARACTERISTIQUES' = MAT1;
+TAB1.'BLOCAGES_MECANIQUES' = CL1 'ET' CL2 'ET' CL3 'ET' CL4;
+TAB1.'TEMPS_CALCULES' = LT1;
+TAB1.'CHARGEMENT' = CHA1;
+TAB1.'HYPOTHESE_DEFORMATIONS' = 'MOT' 'UTILISATEUR';
+TAB1.'GRANDS_DEPLACEMENTS' = VRAI;
+TAB1.'LAGRANGIEN' = 'MOT' 'REACTUALISE';
+TAB1.'PROCEDURE_PERSO1' = VRAI;
+TAB1.'MOVA' = 'MOT' 'RIEN' ;
+TAB1.'FOR1' = PROG 0.;
+TAB1.'DEP1' = PROG 0.;
+TAB1.'IVTK' = 1.;
+
+PASAPAS TAB1;

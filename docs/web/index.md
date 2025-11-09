@@ -22,19 +22,19 @@ Available criteria
 Brittle failure
 ---------------
 
-- Beremin (1993),
-- Ruggieri and Dodds (2015),
-- Forget, Marini and Vincent (2016)
+- Beremin et al. [@beremin_local_1983],
+- Ruggieri and Dodds [@ruggieri_local_2018],
+- Forget, Marini and Vincent [@forget_application_2016].
 
 Ductile failure
 ---------------
 
-- Freudenthal (1950)
-- Cockcroft and Latham (1968)
-- Rice and Tracey (1969)
-- Hancock and McKenzie (1976)
-- Johnson And Cook (1985)
-- Huang (1991)
-- Bai and Wierzbicki (2010)
+- Freudenthal [@freudenthal_alfredm_inelastic_1950],
+- Cockcroft and Latham [@cockcroft_ductility_1968],
+- Rice and Tracey [@rice_ductile_1969],
+- Hancock and McKenzie [@hancock_mechanisms_1976],
+- Johnson And Cook [@johnson_fracture_1985],
+- Huang [@huang_accurate_1991],
+- Bai and Wierzbicki [@bai_application_2010].
 
 # References {.unnumbered}
