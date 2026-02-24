@@ -1,6 +1,7 @@
 pandoc_html(index "--toc" "--number-sections" "--toc-depth=2")
 pandoc_html(install "--toc")
 pandoc_html(analysis_python "--toc")
+pandoc_html(tests "--toc")
 pandoc_html(contributing "--toc")
 pandoc_html(contributors)
 

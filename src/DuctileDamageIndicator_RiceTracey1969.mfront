@@ -10,26 +10,31 @@ di.setEntryName("DamageIndicator");
 p.setGlossaryName("EquivalentPlasticStrain");
 @ExternalStateVariable StressStensor sig;
 sig.setGlossaryName("Stress");
+@ExternalStateVariable StrainStensor eto;
+eto.setGlossaryName("Strain");
 
 @MaterialProperty real D1;
-@MaterialProperty real D2;
 
 @Integrator {
   if (dp > 0) {
-    // stress at the middle of the time step
+    // stress at the middle of the time step (>0 as dp>0)
     const auto sig_mts = eval(sig + dsig / 2);
-    // if the increment of the equivalent plastic strain is not null, we can
-    // safely assume that seq is not null and that the stress triaxiality is
-    // well defined
     // compute mean stress
     const auto sm_mts = trace(sig_mts) / 3;
-    // compute von Mises stress
+    // compute equivalent stress
     const auto seq_mts = sigmaeq(sig_mts);
     // compute stress triaxiality
     const auto eta_mts = sm_mts / seq_mts;
-    // compute damage function
-    const auto W_mts = 1 / (D1 * exp(D2 * eta_mts));
+    // compute eigenvalues of strain increment
+    const auto detovp = deto.computeEigenValues();
+    // sort eigenvalues in descending order
+    const auto [deto1, deto2, deto3] = sortEigenValues(detovp);
+    // compute Lode parameter
+    const auto nu = - 3 * deto2 / (deto1 - deto3);
+    // compute critical strain
+    const auto ec_mts = D1 / (0.558 *  sinh(3 * eta_mts / 2) + 0.008 * nu * cosh(3 * eta_mts / 2));
+    const auto ec_mts_pos = ec_mts > 0 ? ec_mts : 1.e12;
     // update damage indicator
-    di += W_mts * dp;
+    di += dp / ec_mts_pos;
   }
 }

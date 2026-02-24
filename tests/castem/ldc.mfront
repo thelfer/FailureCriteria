@@ -1,0 +1,33 @@
+@DSL Implicit;
+@Behaviour ldc;
+
+@UMATUseTimeSubStepping[castem] true;
+@UMATMaximumSubStepping[castem] 3;
+
+@StrainMeasure Hencky;
+@ModellingHypotheses{".+"};
+@Algorithm NewtonRaphson;
+@Epsilon 1.e-12;
+@Theta 1;
+
+@AuxiliaryStateVariable Stensor totalstrain;
+
+@Brick StandardElastoViscoPlasticity{
+  stress_potential : "Hooke" {
+    young_modulus : "200000.", 
+    poisson_ratio : "0.3"
+  },
+  inelastic_flow : "Plastic" {
+    criterion : "Mises",
+    isotropic_hardening : "Voce" {
+       R0   : "500.",
+       Rinf : "800.",
+       b    : "10." 
+    } 
+  }
+};
+
+@UpdateAuxiliaryStateVariables{
+   totalstrain = eto;
+}
+

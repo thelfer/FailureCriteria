@@ -1,0 +1,18 @@
+set size 1,1
+set origin 0,0
+
+set ylabel '\Large $F / S_0\ \mathrm{(MPa)}$' 
+set xlabel '\Large $\Delta \ell / \ell_0$' 
+set format xy "$%g$"
+set terminal epslatex rounded
+set output 'graphe1.tex' 
+set multiplot
+#set terminal postscript
+#set output 'essai.eps'
+set key bottom right
+#unset key
+
+plot [0:0.30][0:1600] '../exp/MECACHOOZ_tensile_18dpa_L_1CTR1_20_conv.txt' u ($1+($2/22000.)):2 every 200 with linespoints lw 1 pt 6 lc 1 t '$\mathrm{Exp.}$',\
+'../exp/MECACHOOZ_tensile_18dpa_L_2CTR6_20_conv.txt' u ($1+($2/22000.)):2 every 200 with linespoints lw 1 pt 6 lc 2 t '',\
+'../num/ST_20d_uncoupled_100_8_50.csv' u 2:1 with lines lw 2 lc 8 t '$\mathrm{Num.\ uncoupled:\ }\sigma_c = 1500\mathrm{MPa}$',\
+'../num/ST_20d_coupled_100_8_1500_4_0.9.csv' u 2:1 with lines lw 2 lc 8 dt 2 t '$\mathrm{Num.\ coupled:\ }\sigma_c = 1500\mathrm{MPa},\ \gamma_c=4\mathrm{kJ.m^{-2}}$',\

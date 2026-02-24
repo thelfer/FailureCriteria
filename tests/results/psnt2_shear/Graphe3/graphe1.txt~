@@ -1,0 +1,42 @@
+set size 1,1
+set origin 0,0
+
+set ylabel '\Large $D$' 
+set xlabel '\Large $\Delta \ell\ \mathrm{(mm)}$' 
+set format xy "$%g$"
+set terminal epslatex rounded
+set output 'graphe1.tex' 
+set multiplot
+#set terminal postscript
+#set output 'essai.eps'
+set key bottom right
+#unset key
+
+plot [:][0:1.] '../post/DuctileDamageIndicator_Freudenthal1950_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 1 t '$\mathrm{Freudenthal1950}$',\
+'../post/DuctileDamageIndicator_Freudenthal1950_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 1 dt 2 t '',\
+'../post/DuctileDamageIndicator_CockcroftLatham1968_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 2 t '$\mathrm{CockcroftLatham1968}$',\
+'../post/DuctileDamageIndicator_CockcroftLatham1968_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 2 dt 2 t '',\
+'../post/DuctileDamageIndicator_RiceTracey1969_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 3 t '$\mathrm{RiceTracey1969}$',\
+'../post/DuctileDamageIndicator_RiceTracey1969_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 3 dt 2 t '',\
+'../post/DuctileDamageIndicator_RiceTracey1969HighStressTriaxiality_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 4 t '$\mathrm{RiceTracey1969HighStressTriaxiality}$',\
+'../post/DuctileDamageIndicator_RiceTracey1969HighStressTriaxiality_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 4 dt 2 t '',\
+'../post/DuctileDamageIndicator_GeneralizedRiceTracey_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 5 t '$\mathrm{GeneralizedRiceTracey}$',\
+'../post/DuctileDamageIndicator_GeneralizedRiceTracey_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 5 dt 2 t '',\
+'../post/DuctileDamageIndicator_HancockMcKenzie1976_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 6 t '$\mathrm{HancockMcKenzie1976}$',\
+'../post/DuctileDamageIndicator_HancockMcKenzie1976_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 6 dt 2 t '',\
+'../post/DuctileDamageIndicator_GeneralizedHancockMcKenzie_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 7 t '$\mathrm{GeneralizedHancockMcKenzie}$',\
+'../post/DuctileDamageIndicator_GeneralizedHancockMcKenzie_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 7 dt 2 t '',\
+'../post/DuctileDamageIndicator_JohnsonCook1985_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 8 t '$\mathrm{JohnsonCook1985}$',\
+'../post/DuctileDamageIndicator_JohnsonCook1985_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 8 dt 2 t '',\
+'../post/DuctileDamageIndicator_Huang1991_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 9 t '$\mathrm{Huang1991}$',\
+'../post/DuctileDamageIndicator_Huang1991_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 9 dt 2 t '',\
+'../post/DuctileDamageIndicator_GeneralizedHuang_ant10_10_tensile_elements.txt' u 2:4 w l lw 2 lc 10 t '$\mathrm{GeneralizedHuang}$',\
+'../post/DuctileDamageIndicator_GeneralizedHuang_ant10_10_tensile_gauss_points.txt' u 2:4 w l lw 2 lc 10 dt 2 t '',\
+
+
+
+
+
+
+
+

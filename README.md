@@ -9,17 +9,26 @@ Available criteria
 Brittle failure
 ---------------
 
-- Beremin (1993),
-- Ruggieri and Dodds (2015),
-- Forget, Marini and Vincent (2016)
+- Beremin1983
+- BakkerKoers1991
+- KroonFaleskog2002
+- BordetKarstensenKnowlesWiesner2005
+- HoheHardenackeLuckowSiegele2010ExponentialLaw
+- HoheHardenackeLuckowSiegele2010PowerLaw
+- RuggieriDodds2015
+- ForgetMariniVincent2016
+
 
 Ductile failure
 ---------------
 
-- Freudenthal (1950)
-- Cockcroft and Latham (1968)
-- Rice and Tracey (1969)
-- Hancock and McKenzie (1976)
-- Johnson And Cook (1985)
-- Huang (1991)
-- Bai and Wierzbicki (2010)
+- Freudenthal1950
+- CockcroftLatham1968
+- RiceTracey1969HighStressTriaxiality
+- RiceTracey1969
+- GeneralizedRiceTracey
+- HancockMcKenzie1976
+- GeneralizedHancockMcKenzie
+- JohnsonCook1985
+- Huang1991
+- GeneralizedHuang

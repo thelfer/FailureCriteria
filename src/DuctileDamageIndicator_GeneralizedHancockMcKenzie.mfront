@@ -1,0 +1,34 @@
+@DSL DefaultModelDSL{
+  automatic_declaration_of_the_temperature_as_first_external_state_variable :
+      false
+};
+@Model DuctileDamageIndicator_GeneralizedHancockMcKenzie;
+
+@AuxiliaryStateVariable real di;
+di.setEntryName("DamageIndicator");
+@ExternalStateVariable strain p;
+p.setGlossaryName("EquivalentPlasticStrain");
+@ExternalStateVariable StressStensor sig;
+sig.setGlossaryName("Stress");
+
+@MaterialProperty real D1;
+@MaterialProperty real D2;
+@MaterialProperty real D3;
+
+@Integrator {
+  if (dp > 0) {
+    // stress at the middle of the time step (>0 as dp>0)
+    const auto sig_mts = eval(sig + dsig / 2);
+    // compute mean stress
+    const auto sm_mts = trace(sig_mts) / 3;
+    // compute von Mises stress
+    const auto seq_mts = sigmaeq(sig_mts);
+    // compute stress triaxiality
+    const auto eta_mts = sm_mts / seq_mts;
+    // compute critical strain
+    const auto ec_mts = D1 + D2 * exp(- D3 * eta_mts);
+    const auto ec_mts_pos = ec_mts > 0 ? ec_mts : 1.e12;
+    // update damage indicator
+    di += dp / ec_mts_pos;
+  }
+}

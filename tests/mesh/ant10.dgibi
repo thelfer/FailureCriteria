@@ -1,0 +1,34 @@
+NN = 10;
+
+* Options
+
+OPTI DIME 2 ELEM QUA8;
+
+* Mesh
+
+OPTI DENS (1./NN);
+
+L1 = (0. 0.) DROI (0. 1.6);
+L2 = L1 PROJ (1. 0.) CERC (3. 0.) (1. 0.);
+S1 = L1 REGL L2;
+S2 = (S1 COTE 2) TRAN (0. 1.4);
+
+ST1 = S1 ET S2;
+ST2 = ST1 SYME DROI (0. 0.) (1. 0.);
+ST = ST1 ET ST2;
+ELIM ST 0.000001;
+
+TRAC ST;
+
+OUBL L1;
+OUBL L2;
+OUBL S1;
+OUBL S2;
+OUBL ST1;
+OUBL ST2;
+
+OPTI SORT (CHAI 'ant10' '_' NN '.med');
+SORT MED ST;
+
+FIN;
+

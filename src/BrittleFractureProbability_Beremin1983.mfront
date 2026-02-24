@@ -10,18 +10,31 @@ pf.setEntryName("LocalFractureProbability");
 p.setGlossaryName("EquivalentPlasticStrain");
 @ExternalStateVariable StressStensor sig;
 sig.setGlossaryName("Stress");
+@ExternalStateVariable StrainStensor eto;
+eto.setGlossaryName("Strain");
 
 @MaterialProperty real sigma_u;
 @MaterialProperty real m;
-@MaterialProperty real V0;
 
 @Integrator {
-  // stress at the middle of timestep
-  const auto sig_mts = eval(sig + dsig / 2);
-  // compute eigenvalues
-  const auto svp_mts = sig_mts.computeEigenValues();
-  // sort eigenvalues in descending order
-  const auto [s1_mts, s2_mts, s3_mts] = sortEigenValues(svp_mts);
-  // compute the local fracture probability
-  pf = max(pf, pow(max(s1_mts, 0.) / sigma_u, m) / V0);
+  if (dp > 0){
+    // stress at the end of timestep
+    const auto sig_ets = eval(sig + dsig);
+    // compute eigenvalues
+    const auto svp_ets = sig_ets.computeEigenValues();
+    // sort eigenvalues in descending order
+    const auto [s1_ets, s2_ets, s3_ets] = sortEigenValues(svp_ets);
+    if (s1_ets > 0){
+      // strain at the end of timestep
+      const auto eto_ets = eval(eto + deto);
+      // compute eigenvalues
+      const auto evp_ets = eto_ets.computeEigenValues();
+      // sort eigenvalues in descending order
+      const auto [e1_ets, e2_ets, e3_ets] = sortEigenValues(evp_ets);
+      // compute the tentative local fracture probability
+      const auto pnew = pow(s1_ets * exp(-e1_ets/2) / sigma_u,m);
+      // compute the new local fracture probability
+      pf = max(pf, pnew);
+    }
+  }
 }

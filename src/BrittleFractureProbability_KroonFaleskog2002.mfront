@@ -1,0 +1,33 @@
+@DSL DefaultModelDSL{
+  automatic_declaration_of_the_temperature_as_first_external_state_variable :
+      false
+};
+@Model BrittleFractureProbability_KroonFaleskog2002;
+
+@AuxiliaryStateVariable real pf;
+pf.setEntryName("LocalFractureProbability");
+@ExternalStateVariable strain p;
+p.setGlossaryName("EquivalentPlasticStrain");
+@ExternalStateVariable StressStensor sig;
+sig.setGlossaryName("Stress");
+
+@MaterialProperty real sigma_u;
+@MaterialProperty real sigma_th;
+@MaterialProperty real alpha_p;
+
+@Integrator {
+  // stress at the end of timestep
+  const auto sig_ets = eval(sig + dsig);
+  // compute eigenvalues
+  const auto svp_ets = sig_ets.computeEigenValues();
+  // sort eigenvalues in descending order
+  const auto [s1_ets, s2_ets, s3_ets] = sortEigenValues(svp_ets);
+  if (s1_ets > sigma_th){
+    const auto su_sI = sigma_u / s1_ets;
+    const auto su_sth = sigma_u / sigma_th;
+    // compute the tentative local fracture probability
+    const auto pnew = alpha_p * (p + dp)  * (exp(-su_sI*su_sI) - exp(-su_sth*su_sth));
+    // compute the new local fracture probability
+    pf = max(pf, pnew);
+  }
+}

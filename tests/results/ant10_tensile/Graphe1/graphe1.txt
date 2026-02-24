@@ -1,0 +1,15 @@
+set size 1,1
+set origin 0,0
+
+set ylabel '\Large $F \ \mathrm{(N)}$' 
+set xlabel '\Large $\Delta \ell\ \mathrm{(mm)}$' 
+set format xy "$%g$"
+set terminal epslatex rounded
+set output 'graphe1.tex' 
+set multiplot
+#set terminal postscript
+#set output 'essai.eps'
+set key bottom right
+#unset key
+
+plot '../ant10_10_tensile.csv' u 2:1 w l lc 8 lw 2 t ''

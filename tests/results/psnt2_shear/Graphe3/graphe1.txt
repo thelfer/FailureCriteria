@@ -1,0 +1,38 @@
+set size 1,1
+set origin 0,0
+
+set ylabel '\Large $\mathcal{P}_f$' 
+set xlabel '\Large $\Delta \ell\ \mathrm{(mm)}$' 
+set format xy "$%g$"
+set terminal epslatex rounded
+set output 'graphe1.tex' 
+set multiplot
+#set terminal postscript
+#set output 'essai.eps'
+set key bottom right
+#unset key
+
+plot [:][0:1.] '../post/BrittleFractureProbability_Beremin1983_psnt2_10_shear_elements.csv' u 2:4 w l lw 2 lc 1 t '$\mathrm{Beremin1983}$',\
+'../post/BrittleFractureProbability_Beremin1983_psnt2_10_shear_gauss_points.csv' u 2:4 w l lw 2 lc 1 dt 2 t '',\
+'../post/BrittleFractureProbability_BakkerKoers1991_psnt2_10_shear_elements.csv' u 2:4 w l lw 2 lc 2 t '$\mathrm{BakkerKoers1991}$',\
+'../post/BrittleFractureProbability_BakkerKoers1991_psnt2_10_shear_gauss_points.csv' u 2:4 w l lw 2 lc 2 dt 2 t '',\
+'../post/BrittleFractureProbability_KroonFaleskog2002_psnt2_10_shear_elements.csv' u 2:4 w l lw 2 lc 3 t '$\mathrm{KroonFaleskog2002}$',\
+'../post/BrittleFractureProbability_KroonFaleskog2002_psnt2_10_shear_gauss_points.csv' u 2:4 w l lw 2 lc 3 dt 2 t '',\
+'../post/BrittleFractureProbability_BordetKarstensenKnowlesWiesner2005_psnt2_10_shear_elements.csv' u 2:4 w l lw 2 lc 4 t '$\mathrm{BordetKarstensenKnowlesWiesner2005}$',\
+'../post/BrittleFractureProbability_BordetKarstensenKnowlesWiesner2005_psnt2_10_shear_gauss_points.csv' u 2:4 w l lw 2 lc 4 dt 2 t '',\
+'../post/BrittleFractureProbability_HoheHardenackeLuckowSiegele2010PowerLaw_psnt2_10_shear_elements.csv' u 2:4 w l lw 2 lc 5 t '$\mathrm{HoheHardenackeLuckowSiegele2010PowerLaw}$',\
+'../post/BrittleFractureProbability_HoheHardenackeLuckowSiegele2010PowerLaw_psnt2_10_shear_gauss_points.csv' u 2:4 w l lw 2 lc 5 dt 2 t '',\
+'../post/BrittleFractureProbability_HoheHardenackeLuckowSiegele2010ExponentialLaw_psnt2_10_shear_elements.csv' u 2:4 w l lw 2 lc 6 t '$\mathrm{HoheHardenackeLuckowSiegele2010ExponentialLaw}$',\
+'../post/BrittleFractureProbability_HoheHardenackeLuckowSiegele2010ExponentialLaw_psnt2_10_shear_gauss_points.csv' u 2:4 w l lw 2 lc 6 dt 2 t '',\
+'../post/BrittleFractureProbability_RuggieriDodds2015_psnt2_10_shear_elements.csv' u 2:4 w l lw 2 lc 7 t '$\mathrm{RuggieriDodds2015}$',\
+'../post/BrittleFractureProbability_RuggieriDodds2015_psnt2_10_shear_gauss_points.csv' u 2:4 w l lw 2 lc 7 dt 2 t '',\
+'../post/BrittleFractureProbability_ForgetMariniVincent2016_psnt2_10_shear_elements.csv' u 2:4 w l lw 2 lc 8 t '$\mathrm{ForgetMariniVincent2016}$',\
+'../post/BrittleFractureProbability_ForgetMariniVincent2016_psnt2_10_shear_gauss_points.csv' u 2:4 w l lw 2 lc 8 dt 2 t '',\
+
+
+
+
+
+
+
+

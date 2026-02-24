@@ -1,0 +1,20 @@
+#!/bin/bash
+
+python testBakkerKoers1991.py
+python testGeneralizedHancockMcKenzie.py
+python testHuang1991.py
+python testBeremin1983.py
+python testGeneralizedHuang.py
+python testJohnsonCook1985.py
+python testBordetKarstensenKnowlesWiesner2005.py
+python testGeneralizedRiceTracey.py
+python testKroonFaleskog2002.py
+python testCockcroftLatham1968.py
+python testHancockMcKenzie1976.py
+python testRiceTracey1969HighStressTriaxiality.py
+python testForgetMariniVincent2016.py
+python testHoheHardenackeLuckowSiegele2010ExponentialLaw.py
+python testRiceTracey1969.py
+python testFreudenthal1950.py
+python testHoheHardenackeLuckowSiegele2010PowerLaw.py
+python testRuggieriDodds2015.py
