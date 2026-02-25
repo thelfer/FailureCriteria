@@ -1,5 +1,5 @@
 ---
-title: The FractureCriteria project
+title: The FailureCriteria project
 author: Jérémy Hure, Thomas Helfer
 date: 24/02/2026
 lang: en-EN
@@ -14,20 +14,14 @@ eqnPrefixTemplate: "($$i$$)"
 \newcommand{\bm}[1]{\underline{\boldsymbol{#1}}}
 \newcommand{\Frac}[2]{{{\displaystyle \frac{\displaystyle #1}{\displaystyle #2}}}}
 
-The project `FractureCriteria` provides `MFront` implementations of
-various criteria to predict brittle and ductile fracture.
+The project `FailureCriteria` provides `MFront` implementations of
+various criteria to predict brittle and ductile failure.
 Those implementations can be used in uncoupled analyses, in the
 post-processing of the computations, or coupled analyses where the criteria are for example used along with an element deletion strategy.
 
 > The project is very young, please do no hesitate to report mistakes and bugs
 
 The criteria depends on the Cauchy stress tensor $\bm{\sigma}$ and strain tensor $\bm{\varepsilon}$, as well as on equivalent stress $\sigma_{eq}$ and associated cumulated plastic strain $\varepsilon_{eq}$.
-
-Available criteria
-==================
-
-Brittle fracture
----------------
 
 # Probabilistic brittle fracture
 
